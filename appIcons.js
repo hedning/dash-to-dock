@@ -71,11 +71,13 @@ let recentlyClickedAppMonitor = -1;
  * - Update minimization animation target
  * - Update menu if open on windows change
  */
-var MyAppIcon = class DashToDock_AppIcon extends Dash.DashIcon {
+
+var MyAppIcon = GObject.registerClass(
+class DashToDock_AppIcon extends Dash.DashIcon {
 
     // settings are required inside.
-    constructor(remoteModel, app, monitorIndex, iconParams) {
-        super(app, iconParams);
+    _init(remoteModel, app, monitorIndex, iconParams) {
+        super._init(app, iconParams);
 
         // a prefix is required to avoid conflicting with the parent class variable
         this.monitorIndex = monitorIndex;
@@ -774,7 +776,7 @@ var MyAppIcon = class DashToDock_AppIcon extends Dash.DashIcon {
     isLocation() {
         return this._location != null;
     }
-};
+});
 /**
  * Extend AppIconMenu
  *
@@ -1049,11 +1051,11 @@ var MyShowAppsIcon = GObject.registerClass({
         super._init();
 
         // Re-use appIcon methods
-        let appIconPrototype = AppDisplay.AppIcon.prototype;
-        this.actor.connect('leave-event', appIconPrototype._onLeaveEvent.bind(this));
-        this.actor.connect('button-press-event', appIconPrototype._onButtonPress.bind(this));
-        this.actor.connect('touch-event', appIconPrototype._onTouchEvent.bind(this));
-        this.actor.connect('popup-menu', appIconPrototype._onKeyboardPopupMenu.bind(this));
+        // let appIconPrototype = AppDisplay.AppIcon.prototype;
+        // this.actor.connect('leave-event', appIconPrototype._onLeaveEvent.bind(this));
+        // this.actor.connect('button-press-event', appIconPrototype._onButtonPress.bind(this));
+        // this.actor.connect('touch-event', appIconPrototype._onTouchEvent.bind(this));
+        // this.actor.connect('popup-menu', appIconPrototype._onKeyboardPopupMenu.bind(this));
         this.actor.connect('clicked', this._removeMenuTimeout.bind(this));
 
         this._menu = null;

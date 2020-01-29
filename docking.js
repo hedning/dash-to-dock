@@ -310,16 +310,16 @@ var DockedDash = GObject.registerClass({
             // Keep dragged icon consistent in size with this dash
             this.dash,
             'icon-size-changed',
-            () => { Main.overview.dashIconSize = this.dash.iconSize; }
+            () => { Main.overview.dash.iconSize = this.dash.iconSize; }
         ], [
             // This duplicate the similar signal which is in owerview.js.
             // Being connected and thus executed later this effectively
             // overwrite any attempt to use the size of the default dash
             //which given the customization is usually much smaller.
             // I can't easily disconnect the original signal
-            Main.overview._controls.dash,
+            Main.overview._overview._controls.dash,
             'icon-size-changed',
-            () => { Main.overview.dashIconSize = this.dash.iconSize; }
+            () => { Main.overview.dash.iconSize = this.dash.iconSize; }
         ], [
             // sync hover after a popupmenu is closed
             this.dash,
@@ -357,9 +357,9 @@ var DockedDash = GObject.registerClass({
         this._dashSpacer.setDashActor(this._box);
 
         if (this._position == St.Side.LEFT)
-            Main.overview._controls._group.insert_child_at_index(this._dashSpacer, this._rtl ? -1 : 0); // insert on first
+            Main.overview._overview._controls._group.insert_child_at_index(this._dashSpacer, this._rtl ? -1 : 0); // insert on first
         else if (this._position ==  St.Side.RIGHT)
-            Main.overview._controls._group.insert_child_at_index(this._dashSpacer, this._rtl ? 0 : -1); // insert on last
+            Main.overview._overview._controls._group.insert_child_at_index(this._dashSpacer, this._rtl ? 0 : -1); // insert on last
         else if (this._position == St.Side.TOP)
             Main.overview._overview.insert_child_at_index(this._dashSpacer, 0);
         else if (this._position == St.Side.BOTTOM)
@@ -1724,10 +1724,10 @@ var DockManager = class DashToDock_DockManager {
         Main.overview._dash = this._allDocks[0].dash;
 
         // set stored icon size  to the new dash
-        Main.overview.dashIconSize = this._allDocks[0].dash.iconSize;
+        Main.overview.dash.iconSize = this._allDocks[0].dash.iconSize;
 
         // Hide usual Dash
-        Main.overview._controls.dash.actor.hide();
+        Main.overview._overview._controls.dash.actor.hide();
 
         // Also set dash width to 1, so it's almost not taken into account by code
         // calculaing the reserved space in the overview. The reason to keep it at 1 is
@@ -1735,7 +1735,7 @@ var DockManager = class DashToDock_DockManager {
         // in turn is triggergin the appsIcon spring animation, required when no other
         // actors has this effect, i.e in horizontal mode and without the workspaceThumnails
         // 1 static workspace only)
-        Main.overview._controls.dash.actor.set_width(1);
+        Main.overview._overview._controls.dash.actor.set_width(1);
     }
 
     _deleteDocks() {
@@ -1752,13 +1752,13 @@ var DockManager = class DashToDock_DockManager {
     }
 
     _restoreDash() {
-        Main.overview._controls.dash.actor.show();
-        Main.overview._controls.dash.actor.set_width(-1); //reset default dash size
+        Main.overview._overview._controls.dash.actor.show();
+        Main.overview._overview._controls.dash.actor.set_width(-1); //reset default dash size
         // This force the recalculation of the icon size
-        Main.overview._controls.dash._maxHeight = -1;
+        Main.overview._overview._controls.dash._maxHeight = -1;
 
         // reset stored icon size  to the default dash
-        Main.overview.dashIconSize = Main.overview._controls.dash.iconSize;
+        Main.overview.dash.iconSize = Main.overview._overview._controls.dash.iconSize;
 
         Main.overview._dash = this._oldDash;
     }
