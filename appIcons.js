@@ -73,7 +73,7 @@ let recentlyClickedAppMonitor = -1;
  */
 
 var MyAppIcon = GObject.registerClass(
-class DashToDock_AppIcon extends Dash.DashIcon {
+class DashToDock_AppIcon2 extends Dash.DashIcon {
 
     // settings are required inside.
     _init(remoteModel, app, monitorIndex, iconParams) {
@@ -176,7 +176,7 @@ class DashToDock_AppIcon extends Dash.DashIcon {
         this._signalsHandler.destroy();
 
         if (this._scrollEventHandler)
-            this.actor.disconnect(this._scrollEventHandler);
+            this.disconnect(this._scrollEventHandler);
     }
 
     // TOOD Rename this function
@@ -198,14 +198,14 @@ class DashToDock_AppIcon extends Dash.DashIcon {
 
     _optionalScrollCycleWindows() {
         if (this._scrollEventHandler) {
-            this.actor.disconnect(this._scrollEventHandler);
+            this.disconnect(this._scrollEventHandler);
             this._scrollEventHandler = 0;
         }
 
         let settings = Docking.DockManager.settings;
         let isEnabled = settings.get_enum('scroll-action') === scrollAction.CYCLE_WINDOWS;
         if (!isEnabled) return;
-        this._scrollEventHandler = this.actor.connect('scroll-event',
+        this._scrollEventHandler = this.connect('scroll-event',
                                                       this.onScrollEvent.bind(this));
     }
 
@@ -282,13 +282,13 @@ class DashToDock_AppIcon extends Dash.DashIcon {
         // and position are random values, which might exceeds the integer range
         // resulting in an error when assigned to the a rect. This is a more like
         // a workaround to prevent flooding the system with errors.
-        if (this.actor.get_stage() == null)
+        if (this.get_stage() == null)
             return;
 
         let rect = new Meta.Rectangle();
 
-        [rect.x, rect.y] = this.actor.get_transformed_position();
-        [rect.width, rect.height] = this.actor.get_transformed_size();
+        [rect.x, rect.y] = this.get_transformed_position();
+        [rect.width, rect.height] = this.get_transformed_size();
 
         let windows = this.getWindows();
         if (Docking.DockManager.settings.get_boolean('multi-monitor')) {
@@ -310,7 +310,7 @@ class DashToDock_AppIcon extends Dash.DashIcon {
 
     popupMenu() {
         this._removeMenuTimeout();
-        this.actor.fake_release();
+        this.fake_release();
         this._draggable.fakeRelease();
 
         if (!this._menu) {
@@ -324,7 +324,7 @@ class DashToDock_AppIcon extends Dash.DashIcon {
                 else {
                     // Setting the max-height is s useful if part of the menu is
                     // scrollable so the minimum height is smaller than the natural height.
-                    let monitor_index = Main.layoutManager.findIndexForActor(this.actor);
+                    let monitor_index = Main.layoutManager.findIndexForActor(this);
                     let workArea = Main.layoutManager.getWorkAreaForMonitor(monitor_index);
                     let position = Utils.getPosition();
                     this._isHorizontal = ( position == St.Side.TOP ||
@@ -350,7 +350,7 @@ class DashToDock_AppIcon extends Dash.DashIcon {
 
         this.emit('menu-state-changed', true);
 
-        this.actor.set_hover(true);
+        this.set_hover(true);
         this._menu.popup();
         this._menuManager.ignoreRelease();
         this.emit('sync-tooltip');
@@ -544,13 +544,13 @@ class DashToDock_AppIcon extends Dash.DashIcon {
     }
 
     shouldShowTooltip() {
-        return this.actor.hover && (!this._menu || !this._menu.isOpen) &&
+        return this.hover && (!this._menu || !this._menu.isOpen) &&
                             (!this._previewMenu || !this._previewMenu.isOpen);
     }
 
     _windowPreviews() {
         if (!this._previewMenu) {
-            this._previewMenuManager = new PopupMenu.PopupMenuManager(this.actor);
+            this._previewMenuManager = new PopupMenu.PopupMenuManager(this);
 
             this._previewMenu = new WindowPreview.WindowPreviewMenu(this);
 
