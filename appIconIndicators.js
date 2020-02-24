@@ -180,17 +180,16 @@ var RunningIndicatorBase = class DashToDock_RunningIndicatorBase extends Indicat
         for (let i = 1; i <= MAX_WINDOWS_CLASSES; i++) {
             let className = 'running' + i;
             if (i != this._nWindows)
-                this._source.actor.remove_style_class_name(className);
+                this._source.remove_style_class_name(className);
             else
-                this._source.actor.add_style_class_name(className);
+                this._source.add_style_class_name(className);
         }
     }
-
     _updateFocusClass() {
         if (this._isFocused)
-            this._source.actor.add_style_class_name('focused');
+            this._source.add_style_class_name('focused');
         else
-            this._source.actor.remove_style_class_name('focused');
+            this._source.remove_style_class_name('focused');
     }
 
     _updateDefaultDot() {
