@@ -73,7 +73,7 @@ let recentlyClickedAppMonitor = -1;
  */
 
 var MyAppIcon = GObject.registerClass(
-class DashToDock_AppIcon2 extends Dash.DashIcon {
+class DashToDock_AppIcon extends Dash.DashIcon {
 
     // settings are required inside.
     _init(remoteModel, app, monitorIndex, iconParams) {
@@ -331,17 +331,17 @@ class DashToDock_AppIcon2 extends Dash.DashIcon {
                                            position == St.Side.BOTTOM);
                     // If horizontal also remove the height of the dash
                     let fixedDock = Docking.DockManager.settings.get_boolean('dock-fixed');
-                    let additional_margin = this._isHorizontal && !fixedDock ? Main.overview._dash.actor.height : 0;
-                    let verticalMargins = this._menu.actor.margin_top + this._menu.actor.margin_bottom;
+                    let additional_margin = this._isHorizontal && !fixedDock ? Main.overview._dash.height : 0;
+                    let verticalMargins = this._menu.margin_top + this._menu.margin_bottom;
                     // Also set a max width to the menu, so long labels (long windows title) get truncated
-                    this._menu.actor.style = ('max-height: ' + Math.round(workArea.height - additional_margin - verticalMargins) + 'px;' +
+                    this._menu.style = ('max-height: ' + Math.round(workArea.height - additional_margin - verticalMargins) + 'px;' +
                                               'max-width: 400px');
                 }
             });
             let id = Main.overview.connect('hiding', () => {
                 this._menu.close();
             });
-            this._menu.actor.connect('destroy', function() {
+            this._menu.connect('destroy', function() {
                 Main.overview.disconnect(id);
             });
 
@@ -563,7 +563,7 @@ class DashToDock_AppIcon2 extends Dash.DashIcon {
             let id = Main.overview.connect('hiding', () => {
                 this._previewMenu.close();
             });
-            this._previewMenu.actor.connect('destroy', function() {
+            this._previewMenu.connect('destroy', function() {
                 Main.overview.disconnect(id);
             });
 
